@@ -4,36 +4,43 @@
 #include <pthread.h>
 #include "array.h"
 
-int stack_init(stack *s) 
+int array_init(stack *s) 
 {
+    for(int i=0; i<8; i++) {
+        s->array[i] = malloc(sizeof(char) * MAX_NAME_LENGTH);
+    }
     s->top = -1;
+    return 0;
 }
 
-int stack_push(stack *s, char *hostname)
+int array_put(stack *s, char *hostname)
 {
     // Program input takes # of requester threads
     // test.c will create these threads 
     // Then stack_push will use semaphore 
 
-    if(s->top==-1) {
-        s->array[0] = &hostname;
-        s->top = 0;
-        return 0;
+    //printf("TEST1\n");
+
+    if (is_full(s)==1) {
+        printf("Stack is full, wait...\n");
+        return -1;
     }
-    else if(is_full(s)==1) {
-        printf("Stack is full\n");
-        return 1;
-    }
-    else {
-        s->array[s->top+1] = &hostname;
-        s->top++;
-        return 0;
-    }
+    //printf("TEST2\n");
+    s->top++;
+    *s->array[s->top] = hostname;
+    //printf("TEST3\n");
+    return 0;
 }
 
-int stack_pop (stack *s, char **hostname)
+int array_get (stack *s, char **hostname)
 {
-    
+    if (is_empty(s)==1) {
+        printf("Stack is empty, add elements...\n");
+        return 1;
+    }
+    hostname = s->array[s->top];
+    s->top--;
+    return 0;
 }
 
 int is_full (stack *s)
@@ -44,14 +51,32 @@ int is_full (stack *s)
     return 0;
 }
 
-void display (stack *s)
+int is_empty (stack *s)
 {
-    for(int i=0; i<8; i++) {
-        printf("%s\n", s->array[i]);
+    if(s->top==-1) {
+        return 1;
     }
+    return 0;
 }
 
-void stack_free (stack *s)
+int display (stack *s)
+{
+    if(is_empty(s)==1) {
+        printf("Stack is empty, add elements...\n");
+        return 1;
+    }
+
+    for(int i=0; i<=s->top; i++) {
+        printf("%s\n", *s->array[i]);
+    }
+    return 0;
+}
+
+int array_free (stack *s)
 {
     free(s->array);
+
+    //if(free(s->array)==)
+    
+    return 0;
 } 

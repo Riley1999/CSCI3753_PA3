@@ -24,16 +24,35 @@ int main()
     char *test[8] = {"ab", "cd", "ef", "gh", "ij", "kl", "mn", "op"};
 
     stack t;
-
-    stack_init(&t);
-
-    printf("DISPLAY AFTER INIT: \r");
-    display(&t);
     
+    array_init(&t);
+
     for(int i=0; i<8; i++) {
-        stack_push(&t, test[i]);
+        array_put(&t, test[i]);
+    }
+    
+    display(&t);
+
+    array_put(&t, "full");
+
+    array_get(&t, *t.array);
+    
+    display(&t);
+
+    while(t.top!=-1) {
+        array_get(&t, *t.array);
     }
 
-    stack_free(&t);
+    array_get(&t, *t.array);
+
+    for(int i=0; i<4; i++) {
+        array_put(&t, test[i]);
+    }
+
+    display(&t);
+
+    array_free(&t); 
+
+    display(&t);
 }
 
