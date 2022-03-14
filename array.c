@@ -75,8 +75,6 @@ int display (stack *s)
 int array_free (stack *s)
 {
     free(s->array);
-
-    //if(free(s->array)==)
     
     return 0;
 } 
